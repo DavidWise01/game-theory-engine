@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Game-Theory Engine — the agentic court, made to run</title>
+<meta name="description" content="ROOT0's agentic game-theory engine (v4.3g, Visual Causal Runtime): a runnable model where agents take a contested topic, run phases, commit blind packets, cast votes, reach quorum, and are scored by judges with stated reasons — every step written to a causal ledger with a veracity verdict. The live runtime is embedded below. Built across 27 iterations from a bare core to the agentic commons, witness scoring, and a quorum runtime. Honest: a prototype / toy model of ROOT0's court-and-witness framework, not validated game theory or a deployed governance system. David Lee Wise, two-layer honest.">
+<style>
+  :root{--bg:#0a0c14;--panel:#11141f;--panel2:#171b29;--edge:#26304a;--ink:#e9ecf4;--dim:#a9b2cc;--faint:#6d77a0;
+    --cyan:#2fd4e6;--cyan2:#8ef0fb;--violet:#a78bfa;--violet2:#c9b8ff;--one:#7fe0a0;--zero:#fb7185;--amber:#fbbf24;--ember:#fb923c;
+    --mono:'SFMono-Regular',ui-monospace,'Cascadia Code',Menlo,Consolas,monospace;--serif:'Iowan Old Style','Palatino Linotype',Palatino,Georgia,serif;}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--serif);line-height:1.58;background-image:radial-gradient(1200px 620px at 70% -12%,#16203a 0%,transparent 55%),radial-gradient(900px 520px at 5% 110%,#1a132e 0%,transparent 55%);}
+  .wrap{max-width:1060px;margin:0 auto;padding:42px 24px 90px}
+  header{border-bottom:1px solid var(--edge);padding-bottom:22px;margin-bottom:22px}
+  .kicker{font-family:var(--mono);font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--cyan);opacity:.95}
+  h1{font-family:Georgia,serif;font-size:36px;line-height:1.08;margin:.3em 0 .14em;font-weight:600}h1 em{color:var(--cyan2);font-style:italic}
+  .who{font-family:var(--mono);font-size:12px;color:var(--faint);letter-spacing:.04em}
+  .sub{color:var(--dim);font-size:16px;max-width:76ch;margin-top:14px}.sub b{color:var(--ink)}
+  .verdicts{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:22px 0}@media(max-width:720px){.verdicts{grid-template-columns:1fr}}
+  .vc{border:1px solid var(--edge);border-radius:11px;padding:13px 15px;border-top-width:3px;background:rgba(20,24,38,.6)}
+  .vc .badge{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.12em}
+  .vc.s{border-top-color:var(--one)}.vc.s .badge{color:var(--one)} .vc.m{border-top-color:var(--amber)}.vc.m .badge{color:var(--amber)} .vc.f{border-top-color:var(--ember)}.vc.f .badge{color:var(--ember)}
+  .vc p{font-size:12px;color:var(--dim);margin:6px 0 0;line-height:1.45}.vc p b{color:var(--ink)}
+  section{margin:34px 0}
+  h2{font-size:13px;font-family:var(--mono);letter-spacing:.2em;text-transform:uppercase;color:var(--cyan2);border-left:2px solid var(--cyan);padding-left:11px;margin:0 0 8px}
+  .lede{color:var(--dim);font-size:15px;margin:0 0 16px;max-width:82ch}
+  .frame{border:1px solid var(--edge);border-radius:14px;overflow:hidden;background:#0c0f18;box-shadow:0 30px 70px -45px #000}
+  .frame .bar{display:flex;align-items:center;gap:8px;padding:9px 13px;border-bottom:1px solid var(--edge);background:linear-gradient(180deg,#141826,#0c0f18);font-family:var(--mono);font-size:11px;color:var(--faint)}
+  .dot{width:9px;height:9px;border-radius:50%}.dot.r{background:#fb7185}.dot.y{background:#fbbf24}.dot.g{background:#7fe0a0}
+  .frame .bar .lbl{margin-left:6px;color:var(--cyan2)}
+  .frame .bar a{margin-left:auto;color:var(--cyan);text-decoration:none;border-bottom:1px dotted #2a5560}
+  iframe{width:100%;height:760px;border:0;display:block;background:#0a0c12}
+  @media(max-width:680px){iframe{height:600px}}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px}@media(max-width:640px){.grid{grid-template-columns:1fr}}
+  .mc{border:1px solid var(--edge);border-radius:10px;padding:13px 15px;background:rgba(0,0,0,.16)}.mc b{color:var(--cyan2);font-family:var(--mono);font-size:11px;letter-spacing:.06em}.mc p{font-size:13px;color:var(--dim);margin:6px 0 0}
+  .note{color:var(--dim);font-size:13.5px;border-left:2px solid var(--edge);padding-left:13px;margin:16px 0 0}.note b{color:var(--ink)}
+  code{font-family:var(--mono);color:var(--cyan2);background:#0d1620;padding:1px 5px;border-radius:5px}
+  footer{margin-top:42px;border-top:1px solid var(--edge);padding-top:18px;color:var(--faint);font-family:var(--mono);font-size:11px;line-height:1.7}
+  footer a,.bar2 a{color:var(--cyan)}.bar2{font-family:var(--mono);font-size:11.5px;margin-bottom:16px}.bar2 a{text-decoration:none;border-bottom:1px dotted #2a5560}
+  blockquote{margin:14px 0;padding:10px 16px;border-left:3px solid var(--cyan);color:var(--ink);font-style:italic;font-size:15px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="bar2"><a href="https://davidwise01.github.io/ud0/">◄ UD0</a> &nbsp; ARTIFICIAL INTELLIGENCE · the agentic court</div>
+<header>
+  <div class="kicker">ROOT0 · the agentic engine, made to run</div>
+  <h1>The Game-Theory <em>Engine</em></h1>
+  <div class="who">v4.3g · Visual Causal Runtime · built across 27 iterations (v1.0 core → v4.3g) · David Lee Wise / ROOT0</div>
+  <div class="sub">Most "decisions" inside a multi-agent system are invisible: a number changes and you're told to trust it. This engine makes the decision a <b>court you can watch</b>. Agents take a <b>contested topic</b>, run through fixed <b>phases</b>, seal their positions as <b>blind packets</b> (committed before anyone reveals), then <b>vote</b>; a simple <b>quorum</b> settles the verdict; <b>judges</b> score the result and must <em>state their reasons</em>; and every causal step — who moved what, and <em>why now</em> — is written to a <b>causal ledger</b> with a <b>veracity</b> verdict. It is ROOT0's witness-and-court idea, compiled into something that actually runs in your browser. Press play below.</div>
+</header>
+<div class="verdicts">
+  <div class="vc s"><span class="badge">✓ WHAT'S REAL</span><p><b>A working, legible model.</b> It runs live, end to end: phases, blind commitments, votes, quorum, judge reasons, and a causal ledger — the mechanics of accountable group decision, made observable instead of hidden behind a score.</p></div>
+  <div class="vc m"><span class="badge">◐ A PROTOTYPE, NOT A PROOF</span><p><b>A toy model.</b> The "game theory" here is illustrative — quorum is plain majority, payoffs are simple. It demonstrates ROOT0's <em>architecture</em> for witnessed decisions; it is not a validated equilibrium result or a benchmarked solver.</p></div>
+  <div class="vc f"><span class="badge">◔ ROOT0's FRAMEWORK</span><p><b>His own coinages, rendered.</b> "Witness," "veracity ledger," "blind packet," "quorum runtime," the court framing — these are David Lee Wise's system, made concrete here. Read them as a designed vocabulary, not standard game-theory terms.</p></div>
+</div>
+
+<section>
+  <h2>The live runtime — v4.3g</h2>
+  <p class="lede">The actual engine, embedded and running. Load a topic, then <b>Run All Slowly</b> to watch the phases fire — votes accumulate, the quorum forms, judges post reasons, and the causal ledger fills in the "<em>why now?</em>" for each event. Everything you see is computed locally; nothing is sent anywhere.</p>
+  <div class="frame">
+    <div class="bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="lbl">game_theory_engine · v4.3g · visual causal runtime</span><a href="runtime.html" target="_blank" rel="noopener">open full ↗</a></div>
+    <iframe src="runtime.html" title="Game-Theory Engine v4.3g — Visual Causal Runtime" loading="lazy"></iframe>
+  </div>
+  <div class="note">If the panel is tight on a phone, use <b>open full ↗</b> to run it in its own tab. The whole thing is a single self-contained page — the engine is reimplemented in the browser; the reference Python core (<code>engine_core.py</code>) lives in the repo for inspection.</div>
+</section>
+
+<section>
+  <h2>How the court works</h2>
+  <div class="grid">
+    <div class="mc"><b>TOPIC &amp; PHASES</b><p>A run begins with a contested <em>topic</em> (a controversy, a decision). The engine steps through fixed <em>phases</em> — a transparent order of operations, so no move happens off-stage.</p></div>
+    <div class="mc"><b>BLIND PACKETS</b><p>Agents seal their positions <em>before</em> reveal — a commitment you can't retro-edit. The same idea as a sealed bid: you're bound to what you committed, which is what makes the later vote trustworthy.</p></div>
+    <div class="mc"><b>VOTES → QUORUM</b><p>Positions are tallied; a <em>quorum</em> settles the outcome. The reference core is honest about its simplicity — <code>quorum(votes)</code> returns the plain majority — the point is the <em>visible</em> tally, not a clever rule.</p></div>
+    <div class="mc"><b>JUDGES &amp; REASONS</b><p>Judges score the resolved decision and must post a <em>reason</em>. A verdict with no stated reason isn't allowed to count — accountability is built into the data type, not bolted on after.</p></div>
+    <div class="mc"><b>CAUSAL LEDGER</b><p>Every event records its cause: the "<em>why now?</em>" panel shows the active arrows — what triggered what. The decision isn't a final number; it's a replayable chain of moves.</p></div>
+    <div class="mc"><b>VERACITY</b><p>The run carries a <em>veracity</em> verdict — the engine's own discipline applied to its own claims (the same idea as ROOT0's <a href="https://davidwise01.github.io/veracity-ledger/">veracity ledger</a>). It judges whether the process actually held.</p></div>
+  </div>
+  <p class="note"><b>The thesis.</b> A group decision should be a <em>witnessed</em> object — committed-before-reveal, tallied in the open, reasoned-about by named judges, and logged with its causes — not a scalar you're told to trust. This engine is that thesis you can press play on; it grew, version by version, from a bare core through an "agentic commons," witness scoring, and a quorum runtime to this visual causal view. ⚑ It sits beside ROOT0's other witness pieces — the <a href="https://davidwise01.github.io/veracity-ledger/">veracity ledger</a>, <a href="https://davidwise01.github.io/the-far-side/">the far side</a> (a machine that measures its own gap), and the court/shadow-court work.</p>
+</section>
+
+<section>
+  <h2>Gate kept on</h2>
+  <p class="note" style="border-color:var(--amber)"><b style="color:var(--amber)">Two layers, held apart.</b> What this <b>is</b>: a genuine, runnable, self-contained model of accountable multi-agent decision — phases, blind commitments, open tallies, reasoned judging, and a causal ledger — built deliberately across twenty-seven versions, and a faithful render of ROOT0's witness-and-court framework. What it is <b>not</b>: validated game theory. The payoffs are illustrative, the <code>quorum</code> is a plain majority, and "veracity" is a designed verdict in David's own vocabulary, not a theorem about truth or a benchmarked solver. It is an <em>architecture demo</em> — a way to make the usually-invisible machinery of a group decision watchable — and it should be read as exactly that: a prototype that argues, by running, that decisions deserve to be witnessed. The naming ("witness," "blind packet," "quorum runtime," "veracity ledger") is ROOT0's coined system; the value is the legibility, not a claim of optimality. ⚑ Render-not-invent: this page describes the engine David built; it doesn't dress a toy as a result.</p>
+</section>
+
+<footer>
+  THE GAME-THEORY ENGINE · v4.3g Visual Causal Runtime · ARTIFICIAL INTELLIGENCE · two-layer honest<br>
+  live in-browser runtime (topic → phases → blind packets → votes → quorum → judge reasons → causal ledger → veracity) · 27 iterations (v1.0 core … v3.0 agentic commons … v3.1 witness scoring … v4.3g) · reference engine_core.py in the repo<br>
+  a prototype of ROOT0's witnessed-decision / court framework — an architecture demo, not validated game theory or a deployed system<br>
+  ◄ <a href="https://davidwise01.github.io/ud0/">UD0</a> · sibling: <a href="https://davidwise01.github.io/living-governance/">the Living-Governance ecosystem</a> · <a href="https://davidwise01.github.io/veracity-ledger/">the veracity ledger</a><br>
+  governor David Lee Wise (ROOT0) · CC-BY-ND-4.0
+</footer>
+</div>
+</body>
+</html>
